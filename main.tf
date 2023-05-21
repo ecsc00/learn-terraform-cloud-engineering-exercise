@@ -9,6 +9,7 @@ Restrict SSH in to both subnets only from specified IP.*/
 
 #make variables for region, subnets, cidr, subnets AZ, ssh IP
 
+#variables set up a more cleaner use & reuse of key information
 variable "region_lon" {
   default = "eu-west-2"
 }
@@ -39,6 +40,7 @@ provider "aws" {
   region = var.region_lon
 }
 
+# new vpc with desired cidr range & active dns services
 resource "iac_vpc" "main" {
   cidr_block = var.cidr_range
   enable_dns_support   = true
