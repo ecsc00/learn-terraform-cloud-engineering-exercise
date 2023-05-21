@@ -75,3 +75,57 @@ resource "aws_subnet" "public_subnets" {
     Name = "public-${element(var.availability_zones, count.index)}"
   }
 }
+  
+  /* security group allowing traffic to and from the VPc and the public subnets
+limitting ssh to the ip defined in our designated variable.
+*/
+resource "aws_security_group" "public_sg" {
+  name   = "public_sg"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0", "::/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_access_ip]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0", "::/0"]
+  }
+
+  tags = {
+    Name = "public_sg"
+  }
+}
+/*
+Solely allowing ssh via the ip defined in our designated variable.
+*/
+resource "aws_security_group" "private_sg" {
+  name   = "private_sg"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+   
+  }
+}
+  
+/*
+Method to explicitly associate both security groups to subnets
+*/
+    
+/* 
+Method to explicitly associate subnets to route table and route traffic flow as in previous asignments 
+*/
