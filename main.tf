@@ -1,3 +1,14 @@
+#attempt to recreate the previous assingments infrastructure 
+/*Including the use of six subnets: 6 pub, 3 priv
+
+Utilise 3 AZ
+Recreate an IG to allow connectivity from within pub subnets 
+Recreate the NAT gateway to route traffic any priv subnet instances need to public subnet the out.
+
+Restrict SSH in to both subnets only from specified IP.*/
+
+#make variables for region, subnets, cidr, subnets AZ, ssh IP
+
 variable "region_lon" {
   default = "eu-west-2"
 }
