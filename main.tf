@@ -54,3 +54,24 @@ resource "iac_vpc" "main" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 }
+
+#nat gateway, in pub subnet to provide gateway for private subnets 
+resource "aws_nat_gateway" "nat_gw" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnets[0].id
+}
+
+/*creating public subnets for our VPC, with cidr block in our variables
+assigning CIDR block & assigining public IP  to instances in pub subnets 
+*/
+resource "aws_subnet" "public_subnets" {
+  count                   = length(var.public_subnets)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = element(var.public_subnets, count.index)
+  availability_zone       = element(var.availability_zones, count.index)
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-${element(var.availability_zones, count.index)}"
+  }
+}
