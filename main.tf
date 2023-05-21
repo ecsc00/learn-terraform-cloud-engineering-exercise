@@ -49,3 +49,8 @@ resource "iac_vpc" "main" {
     Name = "main"
   }
 }
+
+#vpc internet gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+}
