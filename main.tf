@@ -3,7 +3,7 @@
 
 Utilise 3 AZ
 Recreate an IG to allow connectivity from within pub subnets 
-Recreate the NAT gateway to route traffic any priv subnet instances need to public subnet the out.
+Recreate the NAT gateway to route traffic from any priv subnet instance  to reach public subnet and if necessary out of VPC.
 
 Restrict SSH in to both subnets only from specified IP.*/
 
