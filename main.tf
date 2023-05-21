@@ -41,7 +41,7 @@ provider "aws" {
 }
 
 # new vpc with desired cidr range & active dns services
-resource "iac_vpc" "main" {
+resource "aws_vpc" "main" {
   cidr_block = var.cidr_range
   enable_dns_support   = true
   enable_dns_hostnames = true
