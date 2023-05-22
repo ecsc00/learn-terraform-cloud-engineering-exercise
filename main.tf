@@ -1,5 +1,5 @@
 #attempt to recreate the previous assingments infrastructure 
-/*Including the use of six subnets: 6 pub, 3 priv
+/*Including the use of six subnets: 3 pub, 3 priv
 
 Utilise 3 AZ
 Recreate an IG to allow connectivity from within pub subnets 
@@ -81,6 +81,20 @@ resource "aws_subnet" "public_subnets" {
 
   tags = {
     Name = "public-${element(var.availability_zones, count.index)}"
+  }
+}
+
+/*creating private subnets for our VPC, assigning cidr block &  AZ  via variables
+assigning CIDR block. 
+*/
+resource "aws_subnet" "private_subnets" {
+  count             = length(var.private_subnets)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = element(var.private_subnets, count.index)
+  availability_zone = element(var.availability_zones, count.index)
+
+  tags = {
+    Name = "private-${element(var.availability_zones, count.index)}"
   }
 }
   
