@@ -55,11 +55,19 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 }
 
+# elastic IP
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
 #nat gateway, in pub subnet to provide gateway for private subnets 
 resource "aws_nat_gateway" "nat_gw" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public_subnets[0].id
 }
+
+
+
 
 /*creating public subnets for our VPC, with cidr block in our variables
 assigning CIDR block & assigining public IP  to instances in pub subnets 
@@ -88,14 +96,10 @@ resource "aws_security_group" "public_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+    #ipv6_cidr_blocks = ["::/0"]
   }
   
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    ipv6_cidr_blocks = ["::/0"]
-  }
+  
 
   ingress {
     from_port   = 22
@@ -109,13 +113,7 @@ resource "aws_security_group" "public_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-    egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    ipv6_cidr_blocks = ["::/0"]
+    #ipv6_cidr_blocks = ["::/0"]
   }
   
   
@@ -133,8 +131,14 @@ resource "aws_security_group" "private_sg" {
   ingress {
     from_port   = 22
     to_port     = 22
-   
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_access_ip]
   }
+
+  tags = {
+    Name = "private_sg"
+  }
+
 }
   
 /*
